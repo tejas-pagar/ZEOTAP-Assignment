@@ -1,0 +1,86 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligibility Rule Engine</title>
+    <link rel="stylesheet" href="static/styles.css"> <!-- Optional CSS -->
+</head>
+<body>
+    <h1>Eligibility Rule Engine</h1>
+
+    <h2>Add Rule</h2>
+    <input type="text" id="rule_input" placeholder="Enter rule string">
+    <button id="add_rule_btn">Add Rule</button>
+    <p id="rule_response"></p>
+
+    <h2>Add User Data</h2>
+    <input type="text" id="user_id_input" placeholder="User ID">
+    <input type="number" id="age_input" placeholder="Age">
+    <input type="text" id="department_input" placeholder="Department">
+    <input type="number" id="salary_input" placeholder="Salary">
+    <input type="number" id="experience_input" placeholder="Experience">
+    <button id="add_user_btn">Add User</button>
+    <p id="user_response"></p>
+
+    <h2>Evaluate Eligibility</h2>
+    <input type="text" id="evaluate_user_id_input" placeholder="User ID">
+    <button id="evaluate_btn">Evaluate</button>
+    <p id="evaluation_response"></p>
+
+    <script>
+        document.getElementById('add_rule_btn').addEventListener('click', async () => {
+            const ruleString = document.getElementById('rule_input').value;
+            const response = await fetch('/rules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rule: ruleString })
+            });
+            const data = await response.json();
+            document.getElementById('rule_response').innerText = JSON.stringify(data);
+        });
+
+        document.getElementById('add_user_btn').addEventListener('click', async () => {
+            const userId = document.getElementById('user_id_input').value;
+            const age = document.getElementById('age_input').value;
+            const department = document.getElementById('department_input').value;
+            const salary = document.getElementById('salary_input').value;
+            const experience = document.getElementById('experience_input').value;
+
+            const response = await fetch('/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    user_data: {
+                        age: parseInt(age),
+                        department: department,
+                        salary: parseFloat(salary),
+                        experience: parseInt(experience)
+                    }
+                })
+            });
+            const data = await response.json();
+            document.getElementById('user_response').innerText = JSON.stringify(data);
+        });
+
+        document.getElementById('evaluate_btn').addEventListener('click', async () => {
+            const userId = document.getElementById('evaluate_user_id_input').value;
+            const response = await fetch('/evaluate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId })
+            });
+            const data = await response.json();
+            document.getElementById('evaluation_response').innerText = JSON.stringify(data);
+        });
+    </script>
+</body>
+</html>
