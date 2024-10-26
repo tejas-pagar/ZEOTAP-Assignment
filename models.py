@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 class Rule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    rule_string = db.Column(db.String, nullable=False)  # Rule as a simple string
+    rule_string = db.Column(db.String, nullable=False)  
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
